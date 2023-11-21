@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
-from .forms import CustomRegistrationForm, ProfileForm
+from .forms import CustomRegistrationForm, ProfileForm, LiveEventForm
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, LiveEvent
 
 def home(request):
     user = request.user
@@ -31,14 +31,23 @@ def register(request):
     }
     return render(request, 'users/register.html', context)
 
+def user_profile_page(request, username):
+    user = request.user
+    user_profile = user.profile
+    return render(request, 'users/user_profile_page.html', {'user_profile': user_profile})
 
-# def register(request):
-#     if request.method == 'POST':
-#         form = CustomRegistrationForm(request.POST)
-#         if form.is_valid():
-#             print(form.cleaned_data)
-#             form.save()
-#             return redirect('login')
-#     else:
-#         form = CustomRegistrationForm()
-#     return render(request, 'users/register.html', {"form": form})
+def edit_profile_page(request):
+
+    live_events = LiveEvent.objects.filter(user=request.user)
+
+
+    if request.method == 'POST':
+        form = LiveEventForm(request.POST)
+        if form.is_valid():
+            live_event = form.save(commit=False)
+            live_event.user = request.user
+            live_event.save()
+            return render(request, 'users/edit_profile_page.html', {"live_events": live_events})
+    else:
+        form = LiveEventForm()
+        return render(request, 'users/edit_profile_page.html', {"form": form, "live_events": live_events})

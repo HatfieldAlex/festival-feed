@@ -8,7 +8,8 @@
         <p>
             Hello {{ user_profile.first_name }} {{user_profile.second_name }}.<br>
             Your username is: {{ user.username }}.<br>           
-            You are signed in.<br>            
+            You are signed in.<br>       
+            <a href="{% url 'user_profile_page' username=user.username %}">Profile page</a><br>   
             <a href="{% url 'logout' %}">Sign out</a>
         </p>
     {% else %}

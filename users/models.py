@@ -9,3 +9,12 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username  # Return a string representation of the profile
+
+class LiveEvent(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    venue = models.CharField(max_length=100)
+    year = models.IntegerField()
+
+    def __str__(self):
+        return self.name

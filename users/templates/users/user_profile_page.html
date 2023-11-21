@@ -1,0 +1,31 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+</head>
+<body>
+    <header>
+        <h1>{{user_profile.first_name}} {{user_profile.second_name}}</h1>
+        <nav>
+            <ul>
+                <a href="{% url 'home' %}">home</a>
+                <a href="{% url 'edit_profile_page' %}">edit profile</a>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h3>Concerts & Festivals Attended</h3>
+        <ul>
+            <li>Lollapalooza 2021</li>
+            <li>Glastonbury Festival 2019</li>
+            <li>Coachella 2018</li>
+            <!-- Add more events here -->
+        </ul>
+    </section>
+</body>
+</html>

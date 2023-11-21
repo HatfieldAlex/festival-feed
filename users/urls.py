@@ -8,6 +8,9 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('user/logout/', LogoutView.as_view(template_name='users/home.html'), name='logout'),
     path('user/register/', views.register, name='register'),
+    path('user/show/<str:username>/', views.user_profile_page, name='user_profile_page'),
+    path('user/edit', views.edit_profile_page, name='edit_profile_page')
 ]
+
 
 

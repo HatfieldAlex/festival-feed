@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Settings</title>
+</head>
+<body>
+
+    <a href="{% url 'user_profile_page' username=user.username %}">Profile page</a><br>
+
+    <h1>Delete a Live Event</h1>
+        <p>
+            {% if live_events %}    
+            {% for event in live_events %}
+            <li>{{ event.name }} at {{ event.venue }} in {{ event.year }}</li>
+            {% endfor %}
+            {% else %}
+            <p>No events found.</p>
+            {% endif %}
+        </p>
+    <h1>Add a Live Event</h1>
+            <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+
+</body>
+
