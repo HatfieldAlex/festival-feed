@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <p>
+            Hello {{ user_profile.first_name }} {{user_profile.second_name }}.<br>
+            Your username is: {{ user.username }}.<br>           
+            You are signed in.<br>            
+            <a href="{% url 'logout' %}">Sign out</a>
+        </p>
+    {% else %}
+        <p>
+            You are not signed in. 
+            Click <a href="{% url 'login' %}">here</a> to sign in. 
+            Click <a href="{% url 'register' %}">here</a> to create an account.
+        </p> 
+    {% endif %}
+</body>
+</html>
