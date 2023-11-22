@@ -19,7 +19,7 @@ Profile | Festival Feeds
                 {% endif %}
             </ul>
         </nav>
-    </header>
+    </header> 
 
     <section>
         <h3>Concerts & Festivals Attended</h3>
@@ -32,7 +32,7 @@ Profile | Festival Feeds
             <p>No events found.</p>
             {% endif %}
         </ul>
-    </section>
+    </section> 
 
     <section>
         <h3>Following</h3>
@@ -42,6 +42,9 @@ Profile | Festival Feeds
 
 
         <h3>Followers</h3>
+        {% for follower in user_followers %}
+        {{follower.first_name }} {{follower.second_name }} 
+        {% endfor %}
 
     </section>
 </body>

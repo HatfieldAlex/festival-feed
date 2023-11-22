@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from .forms import CustomRegistrationForm, ProfileForm, LiveEventForm
 from django.contrib.auth.models import User
-from .models import Profile, LiveEvent
+from .models import Profile, LiveEvent, UserEventStatus
 
 def home(request):
     if request.user.is_authenticated:
@@ -35,15 +35,16 @@ def register(request):
     return render(request, 'users/register.html', context)
 
 def user_profile_page(request, username):
-    #user = request.user
-    user = get_object_or_404(User, username=username)
+    user = get_object_or_404(User, username=username) #this is the user object of the profile
     user_profile = user.profile
-    live_events = LiveEvent.objects.filter(user=user)
+    gone_events = UserEventStatus.objects.filter(user=user, status='gone').select_related('live_event')
     followed_users = user_profile.following.all()
+    user_followers = user_profile.followers.all()
     return render(request, 'users/user_profile_page.html', {
         'user_profile': user_profile, 
-        "live_events": live_events, 
-        "followed_users": followed_users})
+        "gone_events": gone_events, 
+        "followed_users": followed_users,
+        "user_followers": user_followers})
 
 def edit_profile_page(request):
 
