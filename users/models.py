@@ -5,6 +5,13 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     second_name = models.CharField(max_length=100)
+    following = models.ManyToManyField('self', related_name='followers', symmetrical=False, blank=True)
+
+    def follow(self, profile):
+        self.following.add(profile)
+
+    def unfollow(self, profile):
+        self.following.remove(profile)
 
 
     def __str__(self):

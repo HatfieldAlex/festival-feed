@@ -1,12 +1,10 @@
+{% extends 'base.html' %}
 
+{% block page_title %}
+Profile | Festival Feeds
+{% endblock %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
-</head>
+{% block content %}
 <body>
     <header>
         <h1>{{user_profile.first_name}} {{user_profile.second_name}}</h1>
@@ -15,6 +13,9 @@
                 <a href="{% url 'home' %}">home</a>
                 {% if user.username == user_profile.user.username%}
                 <a href="{% url 'edit_profile_page' %}">edit profile</a>
+                {% else %}
+                <a href="{% url 'follow_user' username=user_profile.user.username %}">Follow</a>
+                <a href="{% url 'unfollow_user' username=user_profile.user.username %}">Unfollow</a>
                 {% endif %}
             </ul>
         </nav>
@@ -32,5 +33,16 @@
             {% endif %}
         </ul>
     </section>
+
+    <section>
+        <h3>Following</h3>
+        {% for followed_user in followed_users %}
+        {{followed_user.first_name }} {{followed_user.second_name }} 
+        {% endfor %}
+
+
+        <h3>Followers</h3>
+
+    </section>
 </body>
-</html>
+{% endblock %}

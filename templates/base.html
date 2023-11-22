@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block page_title %}{% endblock %}</title>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <div>
+        Festival Feeds |
+        <a href="{% url 'home' %}"> Home</a>|
+        <a href="{% url 'user_profile_page' username=user.username %}">Profile</a>|
+        <a href="{% url 'friend_search' %}">People</a>|
+        <a href="{% url 'logout' %}">Sign out</a>
+    </div>
+    {% endif %}
+
+
+
+    {% block content %}
+
+    {% endblock %}
+</body>
+</html>

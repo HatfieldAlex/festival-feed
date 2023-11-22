@@ -1,12 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Welcome</title>
-</head>
+{% extends 'base.html' %}
+
+{% block page_title %}
+Follow Friends | Festival Feeds
+{% endblock %}
+
+{% block content %}
 <body>
 list of users:
 {% for user in all_users %}
 <li><a href="{% url 'user_profile_page' username=user.user.username %}">{{user.first_name}} {{user.second_name}}</a></li>
 {% endfor %}
 </body>
-</html>
+{% endblock %}

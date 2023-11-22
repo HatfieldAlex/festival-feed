@@ -5,9 +5,12 @@ from django.contrib.auth.models import User
 from .models import Profile, LiveEvent
 
 def home(request):
-    user = request.user
-    user_profile = user.profile
-    return render(request, 'users/home.html', {"user_profile": user_profile})
+    if request.user.is_authenticated:
+        user = request.user
+        user_profile = user.profile
+        return render(request, 'users/home.html', {"user_profile": user_profile})
+    else:
+        return render(request, 'users/home.html')
 
 def register(request):
     if request.method == 'POST':
@@ -36,7 +39,11 @@ def user_profile_page(request, username):
     user = get_object_or_404(User, username=username)
     user_profile = user.profile
     live_events = LiveEvent.objects.filter(user=user)
-    return render(request, 'users/user_profile_page.html', {'user_profile': user_profile, "live_events": live_events})
+    followed_users = user_profile.following.all()
+    return render(request, 'users/user_profile_page.html', {
+        'user_profile': user_profile, 
+        "live_events": live_events, 
+        "followed_users": followed_users})
 
 def edit_profile_page(request):
 
@@ -67,3 +74,21 @@ def friend_search(request):
     all_users = Profile.objects.all()
     return render(request, 'users/friend_search.html', {"all_users": all_users})
 
+def follow_user(request, username):
+    following_user_profile = get_object_or_404(Profile, user=request.user)
+
+    followed_user = get_object_or_404(User, username=username)
+    followed_user_profile = get_object_or_404(Profile, user=followed_user)
+
+    following_user_profile.follow(followed_user_profile)
+    return redirect('friend_search')
+
+    
+def unfollow_user(request, username):
+    following_user_profile = get_object_or_404(Profile, user=request.user)
+
+    followed_user = get_object_or_404(User, username=username)
+    followed_user_profile = get_object_or_404(Profile, user=followed_user)
+
+    following_user_profile.unfollow(followed_user_profile)
+    return redirect('friend_search')
