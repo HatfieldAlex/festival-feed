@@ -32,9 +32,11 @@ def register(request):
     return render(request, 'users/register.html', context)
 
 def user_profile_page(request, username):
-    user = request.user
+    #user = request.user
+    user = get_object_or_404(User, username=username)
     user_profile = user.profile
-    return render(request, 'users/user_profile_page.html', {'user_profile': user_profile})
+    live_events = LiveEvent.objects.filter(user=user)
+    return render(request, 'users/user_profile_page.html', {'user_profile': user_profile, "live_events": live_events})
 
 def edit_profile_page(request):
 
@@ -47,7 +49,21 @@ def edit_profile_page(request):
             live_event = form.save(commit=False)
             live_event.user = request.user
             live_event.save()
-            return render(request, 'users/edit_profile_page.html', {"live_events": live_events})
+            form = LiveEventForm()
+            return render(request, 'users/edit_profile_page.html', {"form": form, "live_events": live_events})
     else:
         form = LiveEventForm()
         return render(request, 'users/edit_profile_page.html', {"form": form, "live_events": live_events})
+    
+
+def delete_event(request, event_id):
+    if request.method == 'POST':
+        event = LiveEvent.objects.get(id=event_id)
+        event.delete()
+        return redirect('edit_profile_page') 
+    
+
+def friend_search(request):
+    all_users = Profile.objects.all()
+    return render(request, 'users/friend_search.html', {"all_users": all_users})
+

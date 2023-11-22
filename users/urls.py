@@ -9,8 +9,9 @@ urlpatterns = [
     path('user/logout/', LogoutView.as_view(template_name='users/home.html'), name='logout'),
     path('user/register/', views.register, name='register'),
     path('user/show/<str:username>/', views.user_profile_page, name='user_profile_page'),
-    path('user/edit', views.edit_profile_page, name='edit_profile_page')
+    path('user/edit', views.edit_profile_page, name='edit_profile_page'),
+    path('user/edit/delete_event/<int:event_id>/', views.delete_event, name='delete_event'),
+    path('/friend_search', views.friend_search,name='friend_search'),
 ]
-
 
 

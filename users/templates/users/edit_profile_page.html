@@ -11,7 +11,11 @@
         <p>
             {% if live_events %}    
             {% for event in live_events %}
-            <li>{{ event.name }} at {{ event.venue }} in {{ event.year }}</li>
+            <li>{{ event.name }} at {{ event.venue }} in {{ event.year }}</li>                
+            <form method="post" action="{% url 'delete_event' event.id %}">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
             {% endfor %}
             {% else %}
             <p>No events found.</p>
