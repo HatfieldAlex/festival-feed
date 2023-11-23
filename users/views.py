@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
-from .forms import CustomRegistrationForm, ProfileForm, LiveEventForm
+from .forms import CustomRegistrationForm, ProfileForm, LiveEventForm, UserEventStatusForm
 from django.contrib.auth.models import User
 from .models import Profile, LiveEvent, UserEventStatus
 
@@ -46,23 +46,77 @@ def user_profile_page(request, username):
         "followed_users": followed_users,
         "user_followers": user_followers})
 
+
 def edit_profile_page(request):
-
-    live_events = LiveEvent.objects.filter(user=request.user)
-
-
     if request.method == 'POST':
-        form = LiveEventForm(request.POST)
-        if form.is_valid():
-            live_event = form.save(commit=False)
-            live_event.user = request.user
-            live_event.save()
-            form = LiveEventForm()
-            return render(request, 'users/edit_profile_page.html', {"form": form, "live_events": live_events})
-    else:
-        form = LiveEventForm()
-        return render(request, 'users/edit_profile_page.html', {"form": form, "live_events": live_events})
+        #take the forms from the inputs 
+        live_event_form = LiveEventForm(request.POST)
+        live_event_status_form = UserEventStatusForm(request.POST)
+
+        if live_event_form.is_valid() and live_event_status_form.is_valid():
+            #save the form inputs 
+            live_event = live_event_form.save()  # Save the live event
+            live_event_status = live_event_status_form.save(commit=False) #save the event status
+
+            #fill in the remaining parts to the eventstatusobject instance, whcih in turn update the corresponding LiveEvent object
+            live_event_status.user = request.user
+            live_event_status.live_event = live_event
+            live_event_status.save()
+
     
+    live_event_form = LiveEventForm()
+    live_event_status_form = UserEventStatusForm()
+    user = request.user
+    live_events = user.attended_events.all()
+
+    #setting up a dictionary to add to the context of the status of each festival
+    events_with_status = []
+
+    for event in live_events:
+        try:
+            # Try to get the status of the user for each event
+            event_status = UserEventStatus.objects.get(user=user, live_event=event).status
+        except UserEventStatus.DoesNotExist:
+            # If there's no status set for an event, you can decide what to do
+            event_status = 'No status set'  # or None, or any other placeholder
+
+        # Add the event and its status to the list
+        events_with_status.append({'event': event, 'status': event_status})
+
+
+
+
+    return render(request, 'users/edit_profile_page.html', {
+        "live_events": live_events,
+        "live_event_form": live_event_form,
+        "event_status_form": live_event_status_form,
+        "events_with_status": events_with_status
+    })
+
+
+
+
+# def edit_profile_page(request):
+#     # # if request.method == 'POST':
+#     # #     live_event_form = LiveEventForm(request.POST)
+#     # #     live_event_status_form = UserEventStatusForm(request.POST)   
+#     # #     if live_event_form.is_valid() and live_event_status_form.is_valid():
+#     # #         live_event = live_event_form.save(commit=False)
+#     # #         live_event_status = live_event_status_form.save(commit=False)
+#     # #         live_event.user = request.user
+#     # #         live_event.save()
+
+
+#     # user = request.user
+#     # event_description_form = LiveEventForm()
+#     # event_status_form = UserEventStatusForm() 
+#     # live_events = user.attended_events.all()
+#     # return render(request, 'users/edit_profile_page.html', {
+#     #     "live_events": live_events,
+#     #     "event_description_form": event_description_form,
+#     #     "event_status_form": event_status_form})
+
+
 
 def delete_event(request, event_id):
     if request.method == 'POST':

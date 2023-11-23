@@ -18,7 +18,6 @@ class Profile(models.Model):
         return self.user.username  # Return a string representation of the profile
 
 class LiveEvent(models.Model):
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)
     attendees = models.ManyToManyField(User, through='UserEventStatus', related_name='attended_events')
     name = models.CharField(max_length=100)
     venue = models.CharField(max_length=100)
