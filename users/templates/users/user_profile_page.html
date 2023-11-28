@@ -10,9 +10,9 @@ Profile | Festival Feeds
         <h1>{{user_profile.first_name}} {{user_profile.second_name}}</h1>
         <nav>
             <ul>
-                <a href="{% url 'home' %}">home</a>
+                
                 {% if user.username == user_profile.user.username%}
-                <a href="{% url 'edit_profile_page' %}">edit profile</a>
+                <a href="{% url 'edit_profile_page' %}"></a>
                 {% else %}
                 <a href="{% url 'follow_user' username=user_profile.user.username %}">Follow</a>
                 <a href="{% url 'unfollow_user' username=user_profile.user.username %}">Unfollow</a>
@@ -72,6 +72,15 @@ Profile | Festival Feeds
         {{follower.first_name }} {{follower.second_name }} 
         {% endfor %}
 
+    </section>
+
+    <section>
+        <ul>
+
+            {% if user.username == user_profile.user.username%}
+            <a href="{% url 'edit_profile_page' %}">edit profile</a>
+            {% endif %}
+        </ul>
     </section>
 </body>
 {% endblock %}

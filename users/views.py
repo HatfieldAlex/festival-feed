@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
-from .forms import CustomRegistrationForm, ProfileForm, LiveEventForm, UserEventStatusForm
+from .forms import CustomRegistrationForm, ProfileForm, LiveEventForm, UserEventStatusForm, SelectLiveEventForm
 from django.contrib.auth.models import User
 from .models import Profile, LiveEvent, UserEventStatus
 
@@ -89,6 +89,9 @@ def edit_profile_page(request):
         # Add the event and its status to the list
         events_with_status.append({'event': event, 'status': event_status})
 
+    select_live_event_form = SelectLiveEventForm()
+    
+
 
 
     
@@ -96,7 +99,8 @@ def edit_profile_page(request):
         "live_events": live_events,
         "live_event_form": live_event_form,
         "event_status_form": live_event_status_form,
-        "events_with_status": events_with_status
+        "events_with_status": events_with_status,
+        "select_live_event_form": select_live_event_form,
     })
 
 
@@ -154,3 +158,54 @@ def unfollow_user(request, username):
 
     following_user_profile.unfollow(followed_user_profile)
     return redirect('friend_search')
+
+
+def add_new_event(request):
+    if request.method == 'POST':
+        #take the forms from the inputs 
+        live_event_form = LiveEventForm(request.POST)
+
+        if live_event_form.is_valid() and live_event_status_form.is_valid():
+            #save the form inputs 
+            live_event = live_event_form.save()  # Save the live event
+
+    live_event_form = LiveEventForm()
+    live_event_status_form = UserEventStatusForm()
+    user = request.user
+    live_events = user.attended_events.all()
+
+    #setting up a dictionary to add to the context of the status of each festival
+    events_with_status = []
+
+    for event in live_events:
+        try:
+            # Try to get the status of the user for each event
+            event_status = UserEventStatus.objects.get(user=user, live_event=event).status
+        except UserEventStatus.DoesNotExist:
+            # If there's no status set for an event, you can decide what to do
+            event_status = 'No status set'  # or None, or any other placeholder
+
+        # Add the event and its status to the list
+        events_with_status.append({'event': event, 'status': event_status})
+
+
+
+    
+    return render(request, 'users/add_new_event.html', {
+        "live_events": live_events,
+        "live_event_form": live_event_form,
+        "event_status_form": live_event_status_form,
+        "events_with_status": events_with_status
+    })
+
+
+
+
+def live_event_search_results(request):
+    query = request.GET.get('query', '')
+    if query:
+        results = LiveEvent.objects.filter(name__icontains=query)
+    else:
+        results = []
+
+    return render(request, 'your_app/live_event_search_results.html', {'results': results})

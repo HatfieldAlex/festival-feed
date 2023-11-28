@@ -8,6 +8,13 @@
     <div>
         Festival Feeds |
         <a href="{% url 'home' %}"> Home</a>|
+        <a> My Festivals</a>|
+        <span id="search-bar">
+            <form action="{% url 'live_event_search_results' %}" method="get">
+                <input type="text" name="query" placeholder="Search...">
+                <button type="submit">S</button>
+            </form>
+        </span>
         <a href="{% url 'user_profile_page' username=user.username %}">Profile</a>|
         <a href="{% url 'friend_search' %}">People</a>|
         <a href="{% url 'logout' %}">Sign out</a>

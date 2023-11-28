@@ -14,6 +14,8 @@ urlpatterns = [
     path('friend_search', views.friend_search,name='friend_search'),
     path('follow_user/<str:username>', views.follow_user,name='follow_user'),
     path('unfollow_user/<str:username>', views.unfollow_user,name='unfollow_user'),
+    path('add_new_event', views.add_new_event, name="add_new_event"),
+    path('search/live-events/', views.live_event_search_results, name='live_event_search_results'),
 ]
 
 

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+Add event | Festival Feeds
+{% endblock %}
+
+{% block content %}
+<h1>Add a Live Event</h1>
+<form method="post">
+{% csrf_token %}
+{{ live_event_form.as_p }}
+<button type="submit">Submit</button>
+</form>
+{% endblock %}

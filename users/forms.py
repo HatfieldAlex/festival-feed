@@ -23,3 +23,6 @@ class UserEventStatusForm(forms.ModelForm):
     class Meta:
         model = UserEventStatus
         fields = ['status']
+
+class SelectLiveEventForm(forms.Form):
+    event = forms.ModelChoiceField(queryset=LiveEvent.objects.all())
