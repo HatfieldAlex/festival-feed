@@ -38,11 +38,17 @@ def user_profile_page(request, username):
     user = get_object_or_404(User, username=username) #this is the user object of the profile
     user_profile = user.profile
     gone_events = UserEventStatus.objects.filter(user=user, status='gone').select_related('live_event')
+    going_events = UserEventStatus.objects.filter(user=user, status='going').select_related('live_event')
+    want_to_go_events = UserEventStatus.objects.filter(user=user, status='gone').select_related('live_event')
     followed_users = user_profile.following.all()
     user_followers = user_profile.followers.all()
+
+    
     return render(request, 'users/user_profile_page.html', {
         'user_profile': user_profile, 
         "gone_events": gone_events, 
+        "want_to_go_events": want_to_go_events,
+        "going_events": going_events,
         "followed_users": followed_users,
         "user_followers": user_followers})
 
@@ -85,7 +91,7 @@ def edit_profile_page(request):
 
 
 
-
+    
     return render(request, 'users/edit_profile_page.html', {
         "live_events": live_events,
         "live_event_form": live_event_form,
@@ -115,6 +121,7 @@ def edit_profile_page(request):
 #     #     "live_events": live_events,
 #     #     "event_description_form": event_description_form,
 #     #     "event_status_form": event_status_form})
+
 
 
 

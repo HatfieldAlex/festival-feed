@@ -24,9 +24,35 @@ Profile | Festival Feeds
     <section>
         <h3>Concerts & Festivals Attended</h3>
         <ul>
-            {% if live_events %}    
-            {% for event in live_events %}
-            <li>{{ event.name }} at {{ event.venue }} in {{ event.year }}</li>                
+            {% if gone_events %}    
+            {% for item in gone_events %}
+            <li>{{ item.live_event.name }} at {{ item.live_event.venue }} in {{ item.live_event.year }}</li>                
+            {% endfor %}
+            {% else %}
+            <p>No events found.</p>
+            {% endif %}
+        </ul>
+    </section> 
+
+    <section>
+        <h3>Concerts & Festivals going to attend</h3>
+        <ul>
+            {% if going_events %}    
+            {% for item in going_events %}
+            <li>{{ item.live_event.name }} at {{ item.live_event.venue }} in {{ item.live_event.year }}</li>                
+            {% endfor %}
+            {% else %}
+            <p>No events found.</p>
+            {% endif %}
+        </ul>
+    </section> 
+
+    <section>
+        <h3>Concerts & Festivals want to attend</h3>
+        <ul>
+            {% if want_to_go_events %}    
+            {% for item in want_to_go_events %}
+            <li>{{ item.live_event.name }} at {{ item.live_event.venue }} in {{ item.live_event.year }}</li>                
             {% endfor %}
             {% else %}
             <p>No events found.</p>
