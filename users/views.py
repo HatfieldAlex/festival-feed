@@ -39,7 +39,7 @@ def user_profile_page(request, username):
     user_profile = user.profile
     gone_events = UserEventStatus.objects.filter(user=user, status='gone').select_related('live_event')
     going_events = UserEventStatus.objects.filter(user=user, status='going').select_related('live_event')
-    want_to_go_events = UserEventStatus.objects.filter(user=user, status='gone').select_related('live_event')
+    want_to_go_events = UserEventStatus.objects.filter(user=user, status='want_to_go').select_related('live_event')
     followed_users = user_profile.following.all()
     user_followers = user_profile.followers.all()
 
@@ -79,25 +79,11 @@ def edit_profile_page(request):
         'status': event_status.status
     } for event_status in user_event_statuses]
     
-    #live_events = user.attended_events.all()
-
-    # #setting up a dictionary to add to the context of the status of each festival
-    # events_with_status = []
-
-    # for event in live_events:
-    #     try:
-    #         # Try to get the status of the user for each event
-    #         event_status = UserEventStatus.objects.get(user=user, live_event__id=event.id).status
-    #     except UserEventStatus.DoesNotExist:
-    #         # If there's no status set for an event, you can decide what to do
-    #         event_status = 'No status set'  # or None, or any other placeholder
-
-    #     # Add the event and its status to the list
-    #     events_with_status.append({'event': event, 'status': event_status})
 
     select_live_event_form = SelectLiveEventForm()
     
     return render(request, 'users/edit_profile_page.html', {
+        "user_event_statuses": user_event_statuses,
         "events_with_details": events_with_details,
         #"user_event_statuses": user_event_statuses,
         #"live_events": live_events,
@@ -134,8 +120,12 @@ def edit_profile_page(request):
 
 def delete_event(request, event_id):
     if request.method == 'POST':
-        event = LiveEvent.objects.get(id=event_id)
-        event.delete()
+        user = request.user
+        live_event = LiveEvent.objects.get(id=event_id)
+        user_event_status = UserEventStatus.objects.filter(user=user, live_event=live_event).first()
+        #event.delete()
+        if user_event_status:
+            user_event_status.delete()
         return redirect('edit_profile_page') 
     
 

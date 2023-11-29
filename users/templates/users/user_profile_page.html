@@ -8,6 +8,10 @@ Profile | Festival Feeds
 <body>
     <header>
         <h1>{{user_profile.first_name}} {{user_profile.second_name}}</h1>
+        {% if user_profile.photo %}
+        <img src="{{ user_profile.photo.url }}" alt="Profile photo of {{ user_profile.user.username }}">
+        {% endif %}
+
         <nav>
             <ul>
                 

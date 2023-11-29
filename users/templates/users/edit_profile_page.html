@@ -10,13 +10,13 @@
 
     <h1>Delete a Live Event</h1>
         <p>
-            {% if events_with_details %}    
-            {% for item in events_with_details %}
-            <li>{{ item.name }} at {{ item.venue }} in {{ item.year }}. Status: {{ item.status }}</li>                 
-            {% comment %} <form method="post" action="{% url 'delete_event' item.event.id %}">
+            {% if user_event_statuses %}    
+            {% for item in user_event_statuses %}
+            <li>{{ item.live_event.name }} at {{ item.live_event.venue }} in {{ item.live_event.year }}. Status: {{ item.status }}</li>                 
+            <form method="post" action="{% url 'delete_event' item.live_event.id %}">
                 {% csrf_token %}
                 <button type="submit">Delete</button>
-            </form>    {% endcomment %}
+            </form>   
             {% endfor %}
             {% else %}
             <p>No events found.</p>
