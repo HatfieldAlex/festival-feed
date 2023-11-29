@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Account Settings</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
+
+{% block page_title %}Account Settings{% endblock %}
+
+{% block content %}
     <a href="{% url 'user_profile_page' username=user.username %}">Profile page</a><br>
 
     <h1>Delete a Live Event</h1>
@@ -30,4 +29,5 @@
         </form>
 
 </body>
+{% endblock %}
 

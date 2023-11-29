@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+Search results | Festival Feeds
+{% endblock %}
+
+
+{% block content %}
+{% if results %}
+    <ul>
+        {% for event in results %}
+        <a href="{% url 'event_page' event.id %}">
+            <li>{{ event.name }}, {{ event.year }}</li> 
+        </a>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+
+Not Found what you were looking for? Create a FestialFeeds event <a href="{% url 'add_new_event' %}">here</a>
+
+{% endblock %}

@@ -16,6 +16,8 @@ urlpatterns = [
     path('unfollow_user/<str:username>', views.unfollow_user,name='unfollow_user'),
     path('add_new_event', views.add_new_event, name="add_new_event"),
     path('search/live-events/', views.live_event_search_results, name='live_event_search_results'),
+    path('live_event_search_results', views.live_event_search_results, name='live_event_search_results'),
+    path('event/show/<int:event_id>', views.event_page, name="event_page"),
 ]
 
 
