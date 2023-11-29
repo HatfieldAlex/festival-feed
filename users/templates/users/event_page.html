@@ -7,6 +7,11 @@
 
 {% block content %}
 
-{{ event.name }}
+{{ event.name }}, {{ event.year }}
+{{ event.venue }}
+
+Attendees: {% for attendee in event.attendees.all %}
+<li>{{ attendee.first_name }} {{ attendee.second_name }}</li>  
+{% endfor %}
 
 {% endblock %}

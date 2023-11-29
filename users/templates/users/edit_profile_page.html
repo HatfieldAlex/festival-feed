@@ -6,22 +6,24 @@
 {% block content %}
     <a href="{% url 'user_profile_page' username=user.username %}">Profile page</a><br>
 
+    {{user_event_statuses}}
+
     <h1>Delete a Live Event</h1>
         <p>
-            {% if events_with_status %}    
-            {% for item in events_with_status %}
-            <li>{{ item.name }} at {{ item.event.venue }} in {{ item.event.year }}. Status: {{ item.status }}</li>                 
-            <form method="post" action="{% url 'delete_event' item.event.id %}">
+            {% if events_with_details %}    
+            {% for item in events_with_details %}
+            <li>{{ item.name }} at {{ item.venue }} in {{ item.year }}. Status: {{ item.status }}</li>                 
+            {% comment %} <form method="post" action="{% url 'delete_event' item.event.id %}">
                 {% csrf_token %}
                 <button type="submit">Delete</button>
-            </form>  
+            </form>    {% endcomment %}
             {% endfor %}
             {% else %}
             <p>No events found.</p>
             {% endif %}
         </p>
     <h1>Add a Live Event</h1>
-            <form method="post">
+        <form method="post">
             {% csrf_token %}
             {{ select_live_event_form.as_p }}
             {{ event_status_form.as_p }}

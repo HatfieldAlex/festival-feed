@@ -56,50 +56,53 @@ def user_profile_page(request, username):
 def edit_profile_page(request):
     if request.method == 'POST':
         #take the forms from the inputs 
-        live_event_form = LiveEventForm(request.POST)
+        select_live_event_form = SelectLiveEventForm(request.POST)
         live_event_status_form = UserEventStatusForm(request.POST)
 
-        if live_event_form.is_valid() and live_event_status_form.is_valid():
-            #save the form inputs 
-            live_event = live_event_form.save()  # Save the live event
+        if select_live_event_form.is_valid() and live_event_status_form.is_valid():
+            selected_event = select_live_event_form.cleaned_data['event'] # isolate the selelted event
             live_event_status = live_event_status_form.save(commit=False) #save the event status
-
             #fill in the remaining parts to the eventstatusobject instance, whcih in turn update the corresponding LiveEvent object
             live_event_status.user = request.user
-            live_event_status.live_event = live_event
+            live_event_status.live_event = selected_event #updating the event part of the live_event_status
             live_event_status.save()
 
     
-    live_event_form = LiveEventForm()
+
     live_event_status_form = UserEventStatusForm()
     user = request.user
-    live_events = user.attended_events.all()
+    user_event_statuses = UserEventStatus.objects.filter(user=user).select_related('live_event')
+    events_with_details = [{
+        'name': event_status.live_event.name,
+        'venue': event_status.live_event.venue,
+        'year': event_status.live_event.year,
+        'status': event_status.status
+    } for event_status in user_event_statuses]
+    
+    #live_events = user.attended_events.all()
 
-    #setting up a dictionary to add to the context of the status of each festival
-    events_with_status = []
+    # #setting up a dictionary to add to the context of the status of each festival
+    # events_with_status = []
 
-    for event in live_events:
-        try:
-            # Try to get the status of the user for each event
-            event_status = UserEventStatus.objects.get(user=user, live_event=event).status
-        except UserEventStatus.DoesNotExist:
-            # If there's no status set for an event, you can decide what to do
-            event_status = 'No status set'  # or None, or any other placeholder
+    # for event in live_events:
+    #     try:
+    #         # Try to get the status of the user for each event
+    #         event_status = UserEventStatus.objects.get(user=user, live_event__id=event.id).status
+    #     except UserEventStatus.DoesNotExist:
+    #         # If there's no status set for an event, you can decide what to do
+    #         event_status = 'No status set'  # or None, or any other placeholder
 
-        # Add the event and its status to the list
-        events_with_status.append({'event': event, 'status': event_status})
+    #     # Add the event and its status to the list
+    #     events_with_status.append({'event': event, 'status': event_status})
 
     select_live_event_form = SelectLiveEventForm()
     
-
-
-
-    
     return render(request, 'users/edit_profile_page.html', {
-        "live_events": live_events,
-        "live_event_form": live_event_form,
+        "events_with_details": events_with_details,
+        #"user_event_statuses": user_event_statuses,
+        #"live_events": live_events,
         "event_status_form": live_event_status_form,
-        "events_with_status": events_with_status,
+        # "events_with_status": events_with_status,
         "select_live_event_form": select_live_event_form,
     })
 
